@@ -17,6 +17,7 @@ xgboost = "^1.6.1"
 plotly = "^5.9.0"
 ipywidgets = "^7.7.1"
 jupyterlab = "^3"
+kaggle = "^1.5.12"
 
 [tool.poetry.dev-dependencies]
 jupyter = "^1.0.0"
