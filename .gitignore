@@ -20,3 +20,6 @@ __pycache__/
 # Environments
 .env
 .venv
+
+# loaded files
+/data/
