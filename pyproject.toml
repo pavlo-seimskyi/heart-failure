@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "water-quality"
+version = "0.1.0"
+description = ""
+authors = ["Pavlo Seimskyi <pavseim@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+sklearn = "^0.0"
+pandas = "^1.4.3"
+numpy = "^1.23.1"
+matplotlib = "^3.5.2"
+seaborn = "^0.11.2"
+statsmodels = "^0.13.2"
+lightgbm = "^3.3.2"
+xgboost = "^1.6.1"
+plotly = "^5.9.0"
+ipywidgets = "^7.7.1"
+jupyterlab = "^3"
+
+[tool.poetry.dev-dependencies]
+jupyter = "^1.0.0"
+ipykernel = "^6.15.1"
+black = "^22.6.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
