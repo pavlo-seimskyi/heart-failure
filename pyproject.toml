@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "water-quality"
+name = "heart-failure"
 version = "0.1.0"
 description = ""
 authors = ["Pavlo Seimskyi <pavseim@gmail.com>"]
@@ -23,6 +23,9 @@ kaggle = "^1.5.12"
 jupyter = "^1.0.0"
 ipykernel = "^6.15.1"
 black = "^22.6.0"
+jupyterlab-code-formatter = "^1.5.3"
+isort = "^5.10.1"
+flake8 = "^5.0.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
