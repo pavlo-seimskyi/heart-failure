@@ -1,7 +1,12 @@
 import pandas as pd
-from sklearn.metrics import RocCurveDisplay, confusion_matrix
-import seaborn as sns
-import matplotlib.pyplot as plt
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    PrecisionRecallDisplay,
+    RocCurveDisplay,
+    precision_score,
+    recall_score,
+    roc_curve,
+)
 
 
 def get_feature_importance(model, x_cols, ascending=False):
@@ -10,19 +15,64 @@ def get_feature_importance(model, x_cols, ascending=False):
     ).sort_values("imp", ascending=ascending)
 
 
-def plot_confusion_matrix(y_test, y_pred):
-    sns.heatmap(
-        data=confusion_matrix(y_test, y_pred),
-        annot=True,
-        cmap="Blues",
+def plot_precision_recall_curve(y_test, y_pred_proba, threshold, ax):
+    """Plot the curve with a marker pointing to the current cutoff threshold.
+
+    :param y_test: true target variable
+    :param y_pred_proba: prediction probabilities for the positive class (0.0 to 1.0)
+    :param threshold: cutoff point to determine the final prediction
+    :param ax: matplotlib.plt axis
+    :return: None
+    """
+    PrecisionRecallDisplay.from_predictions(y_test, y_pred_proba, ax=ax)
+    ax.set_title("Precision-recall curve")
+    y_pred = (y_pred_proba >= threshold).astype(float)
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    ax.plot(
+        recall,
+        precision,
+        marker="x",
+        color="r",
+        markersize=15,
+        label="chosen threshold",
     )
-
-    plt.ylabel("True label")
-    plt.xlabel("Predicted label")
-    plt.title("Confusion matrix")
-    plt.show()
+    ax.legend()
 
 
-def plot_roc_curve(y_test, y_pred):
-    RocCurveDisplay.from_predictions(y_test, y_pred)
-    plt.show()
+def plot_roc_curve(y_test, y_pred_proba, threshold, ax):
+    """
+    Plot the curve with a marker pointing to the current cutoff threshold.
+
+    :param y_test: true target variable
+    :param y_pred_proba: prediction probabilities for the positive class (0.0 to 1.0)
+    :param threshold: cutoff point to determine the final prediction
+    :param ax: matplotlib.plt axis
+    :return: None
+    """
+    RocCurveDisplay.from_predictions(y_test, y_pred_proba, ax=ax)
+    ax.set_title("ROC curve")
+    fp_rate, tp_rate, thresholds = roc_curve(y_test, y_pred_proba)
+    nearest_thres_idx = abs((thresholds - threshold)).argmin()
+    ax.plot(
+        fp_rate[nearest_thres_idx],
+        tp_rate[nearest_thres_idx],
+        marker="x",
+        color="r",
+        markersize=15,
+        label="chosen threshold",
+    )
+    ax.legend()
+
+
+def plot_confusion_matrix(y_test, y_pred, ax):
+    """
+    Plot a confusion matrix on axis.
+
+    :param y_test: true target variable
+    :param y_pred: predictions
+    :param ax: matplotlib.plt axis
+    :return:
+    """
+    ConfusionMatrixDisplay.from_predictions(y_test, y_pred, ax=ax, cmap="Blues")
+    ax.set_title("Confusion matrix")
