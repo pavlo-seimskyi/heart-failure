@@ -21,7 +21,9 @@ class Preprocessor:
                 colname="ST_Slope",
                 mapping={"Down": -1, "Flat": 0, "Up": 1},
             )
-        )
+        ).select_dtypes(
+            ["number"]
+        )  # Drop all non-numerical columns
 
     def apply_ordinal_mapping(self, data: pd.DataFrame, colname: str, mapping: dict):
         """

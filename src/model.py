@@ -3,11 +3,8 @@ from matplotlib import pyplot as plt
 from sklearn.metrics import classification_report, precision_recall_curve
 from sklearn.model_selection import GridSearchCV, cross_val_predict
 
-from src.metrics import (
-    plot_confusion_matrix,
-    plot_precision_recall_curve,
-    plot_roc_curve,
-)
+from src.metrics import (plot_confusion_matrix, plot_feature_importance,
+                         plot_precision_recall_curve, plot_roc_curve)
 
 
 class BinaryClassifierModel(object):
@@ -42,12 +39,14 @@ class BinaryClassifierModel(object):
         )[:, 1]
         y_pred = (y_pred_proba >= self.threshold).astype(float)
         print(classification_report(y, y_pred))
-        fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(15, 4))
+        fig, axs = plt.subplots(nrows=1, ncols=4, figsize=(20, 4))
+        plt.tight_layout(h_pad=1, w_pad=9)
         plot_confusion_matrix(y, y_pred, ax=axs[0])
         plot_precision_recall_curve(
             y, y_pred_proba, threshold=self.threshold, ax=axs[1]
         )
         plot_roc_curve(y, y_pred_proba, threshold=self.threshold, ax=axs[2])
+        plot_feature_importance(self.model, x.columns.tolist(), ax=axs[3])
 
     def select_threshold_based_on_recall(self, x, y, min_recall, cv=10):
         """
