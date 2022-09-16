@@ -1,8 +1,9 @@
 # Set up Kaggle API credentials: https://github.com/Kaggle/kaggle-api#api-credentials
 import os
-from src.utils import get_base_path
+
 from kaggle.api.kaggle_api_extended import KaggleApi
 
+from src.utils import get_base_path
 
 DATASET_NAME = "fedesoriano/heart-failure-prediction"
 DATASET_FOLDER = os.path.join(get_base_path(), "data")
