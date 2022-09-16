@@ -1,10 +1,18 @@
+import os
+import pickle
+
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.metrics import classification_report, precision_recall_curve
 from sklearn.model_selection import GridSearchCV, cross_val_predict
 
-from src.metrics import (plot_confusion_matrix, plot_feature_importance,
-                         plot_precision_recall_curve, plot_roc_curve)
+from src.metrics import (
+    plot_confusion_matrix,
+    plot_feature_importance,
+    plot_precision_recall_curve,
+    plot_roc_curve,
+)
+from src.utils import get_base_path
 
 
 class BinaryClassifierModel(object):
@@ -20,7 +28,7 @@ class BinaryClassifierModel(object):
             cv=10,
             scoring=metrics,
             refit=metrics[0],
-            **kwargs
+            **kwargs,
         )
         grid_model.fit(x, y)
         self.model = grid_model.best_estimator_
@@ -29,6 +37,22 @@ class BinaryClassifierModel(object):
         """Predict with a custom threshold."""
         y_pred_proba = self.model.predict_proba(x)[:, 1]
         return (y_pred_proba >= self.threshold).astype(float)
+
+    def save_model(self, folder, model_name):
+        """Save the model to disk."""
+        folder_path = os.path.join(get_base_path(), folder)
+        file_path = os.path.join(folder_path, model_name)
+        os.makedirs(folder_path, exist_ok=True)
+        with open(file_path, "wb") as f:
+            pickle.dump(self.model, f)
+
+    def load_model(self, folder, model_name):
+        """Load the model from disk."""
+        path = os.path.join(get_base_path(), folder, model_name)
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"No file/directory found at path: {path}")
+        with open(path, "rb") as f:
+            self.model = pickle.load(f)
 
     def preprocess(self, x):
         return self.preprocessor.preprocess(x)
