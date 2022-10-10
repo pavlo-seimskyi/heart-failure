@@ -2,16 +2,14 @@ import os
 import pickle
 
 import numpy as np
+import shap
 from matplotlib import pyplot as plt
-from sklearn.metrics import classification_report, precision_recall_curve
+from sklearn.metrics import precision_recall_curve
 from sklearn.model_selection import GridSearchCV, cross_val_predict
 
-from src.metrics import (
-    plot_confusion_matrix,
-    plot_feature_importance,
-    plot_precision_recall_curve,
-    plot_roc_curve,
-)
+from src.metrics import (plot_confusion_matrix, plot_feature_importance,
+                         plot_precision_recall_curve, plot_roc_curve,
+                         print_metrics)
 from src.utils import get_base_path
 
 
@@ -62,15 +60,21 @@ class BinaryClassifierModel(object):
             self.model, x, y, cv=cv, method="predict_proba"
         )[:, 1]
         y_pred = (y_pred_proba >= self.threshold).astype(float)
-        print(classification_report(y, y_pred))
-        fig, axs = plt.subplots(nrows=1, ncols=4, figsize=(20, 4))
+        print_metrics(y, y_pred)
+        fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(15, 4))
         plt.tight_layout(h_pad=1, w_pad=9)
         plot_confusion_matrix(y, y_pred, ax=axs[0])
         plot_precision_recall_curve(
             y, y_pred_proba, threshold=self.threshold, ax=axs[1]
         )
         plot_roc_curve(y, y_pred_proba, threshold=self.threshold, ax=axs[2])
-        plot_feature_importance(self.model, x.columns.tolist(), ax=axs[3])
+        plt.show()
+        self.plot_shap_feature_importance(x)
+
+    def plot_shap_feature_importance(self, x):
+        explainer = shap.TreeExplainer(self.model)
+        shap_values = explainer.shap_values(x)
+        shap.summary_plot(shap_values, x, title="Feature importance (SHAP)")
 
     def select_threshold_based_on_recall(self, x, y, min_recall, cv=10):
         """

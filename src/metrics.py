@@ -1,14 +1,19 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from sklearn.metrics import (
-    ConfusionMatrixDisplay,
-    PrecisionRecallDisplay,
-    RocCurveDisplay,
-    precision_score,
-    recall_score,
-    roc_curve,
-)
+import shap
+from sklearn.metrics import (ConfusionMatrixDisplay, PrecisionRecallDisplay,
+                             RocCurveDisplay, f1_score, precision_score,
+                             recall_score, roc_curve)
+
+
+def print_metrics(y_test, y_pred):
+    metrics = {
+        "f1": f1_score(y_test, y_pred),
+        "precision": precision_score(y_test, y_pred),
+        "recall": recall_score(y_test, y_pred),
+    }
+    print(", ".join([f"{name}: {round(value, 3)}" for name, value in metrics.items()]))
 
 
 def plot_feature_importance(model, x_cols, ax):
