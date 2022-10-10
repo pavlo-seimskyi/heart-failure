@@ -7,13 +7,9 @@ from matplotlib import pyplot as plt
 from sklearn.metrics import precision_recall_curve
 from sklearn.model_selection import GridSearchCV, cross_val_predict
 
-from src.metrics import (
-    plot_confusion_matrix,
-    plot_feature_importance,
-    plot_precision_recall_curve,
-    plot_roc_curve,
-    print_metrics,
-)
+from src.metrics import (plot_confusion_matrix, plot_feature_importance,
+                         plot_precision_recall_curve, plot_roc_curve,
+                         print_metrics)
 from src.utils import get_base_path
 
 
