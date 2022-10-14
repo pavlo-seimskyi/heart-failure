@@ -78,7 +78,7 @@ class BinaryClassifierModel(object):
     def plot_shap_feature_importance(self, x):
         explainer = shap.TreeExplainer(self.model)
         shap_values = explainer.shap_values(x)
-        if type(shap_values) == list:
+        if type(shap_values) == list:  # XGBoost returns a single array of SHAP values
             shap_values = shap_values[1]
         shap.summary_plot(
             shap_values, x, plot_type="dot", show=False, plot_size=[25, 6]
