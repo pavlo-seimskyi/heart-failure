@@ -2,9 +2,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import shap
-from sklearn.metrics import (ConfusionMatrixDisplay, PrecisionRecallDisplay,
-                             RocCurveDisplay, f1_score, precision_score,
-                             recall_score, roc_curve)
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    PrecisionRecallDisplay,
+    RocCurveDisplay,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_curve,
+)
 
 
 def print_metrics(y_test, y_pred):
